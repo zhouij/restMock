@@ -1,0 +1,14 @@
+{
+  "endpoint": [{
+    "action": "get",
+    "path": "test1",
+    "status": "200",
+    "body": "{color: \"red\", value: \"#f00\"}"
+  },
+  {
+    "action": "post",
+    "path": "test2",
+    "status": "200",
+    "body": "{status: \"success\"}"
+  }]
+}
