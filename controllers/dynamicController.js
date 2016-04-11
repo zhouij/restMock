@@ -1,52 +1,22 @@
 var fs = require('fs');
 
 module.exports = {
-  init: init
+  init: init,
+  readEndpoints:readEndpoints
 };
 
 function init(router) {
-  var endpoints = readEndpoints().endpoint;
-  setupEndpoint(router, endpoints);
+  var config = readEndpoints();
+  setupEndpoint(router, config);
 };
 
-function setupEndpoint(router, endpoints) {
-
-  //console.log(endpoints);
-  for (var endpoint in endpoints) {
-    console.log("count");
-    console.log(endpoints[endpoint].action);
-
-    switch(endpoints[endpoint].action) {
-      case "get":
-        console.log(endpoints[endpoint]);
-        console.log(endpoints[endpoint].body);
-        router.get("/" + endpoints[endpoint].path, function (req, res) {
-          res.statusCode = endpoints[endpoint].status;
-          res.send(endpoints[endpoint].body);
-        });
-        break;
-
-      case "post":
-        console.log(endpoints[endpoint]);
-        console.log(endpoints[endpoint].body);
-        router.post("/" + endpoints[endpoint].path, function (req, res) {
-          res.statusCode = endpoints[endpoint].status;
-          res.send(endpoints[endpoint].body);
-        });
-        break;
-
-      case "put":
-        console.log(endpoints[endpoint]);
-        router.put("/" + endpoints[endpoint].path, function (req, res) {
-          res.statusCode = endpoints[endpoint].status;
-          res.send(endpoints[endpoint].body);
-        });
-        break;
-
-      default:
-        console.log("action " + endpoints[endpoint].action + " is not found as a valid action type for this app.");
-    }
-  }
+function setupEndpoint(router, config) {
+  config.endpoints.forEach(function (endpoint) {
+    router[endpoint.action]("/" + endpoint.path, function (req, res) {
+      res.statusCode = endpoint.statusCode;
+      res.send(endpoint.body);
+    });
+  });
 }
 
 function readEndpoints() {
